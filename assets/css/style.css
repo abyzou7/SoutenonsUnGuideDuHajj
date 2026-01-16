@@ -673,6 +673,22 @@ footer p {
     .footer-links {
         flex-direction: column;
         gap: var(--spacing-sm);
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    /* Aligner les boutons au centre sur mobile */
+    .btn-secondary,
+    .btn {
+        display: block;
+        margin: var(--spacing-sm) auto;
+        text-align: center;
+    }
+
+    /* Pour les groupes de boutons */
+    .text-center .btn,
+    .text-center .btn-secondary {
+        margin: var(--spacing-sm) auto;
     }
 }
 
