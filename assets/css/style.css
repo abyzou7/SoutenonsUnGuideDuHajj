@@ -619,15 +619,18 @@ footer p {
 
     .nav-menu li {
         width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     .nav-menu li a {
         display: block;
-        padding: 0.6rem var(--spacing-md);
+        padding: 0.5rem var(--spacing-md);
         width: 100%;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         border-radius: var(--border-radius);
-        line-height: 1.4;
+        line-height: 1.3;
+        margin: 0;
     }
 
     .nav-menu li a::after {
