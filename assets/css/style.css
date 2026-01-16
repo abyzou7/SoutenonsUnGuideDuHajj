@@ -601,12 +601,12 @@ footer p {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 280px;
+        width: 240px;
         height: 100vh;
         background: var(--color-white);
         box-shadow: var(--shadow-lg);
-        padding: var(--spacing-xl) var(--spacing-md);
-        gap: var(--spacing-sm);
+        padding: var(--spacing-lg) var(--spacing-sm);
+        gap: var(--spacing-xs);
         transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1000;
         overflow-y: auto;
@@ -623,9 +623,9 @@ footer p {
 
     .nav-menu li a {
         display: block;
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm) var(--spacing-md);
         width: 100%;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         border-radius: var(--border-radius);
     }
 
