@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressPercentage = document.getElementById('progressPercentage');
 
     if (progressBar && progressPercentage) {
-        const collected = parseFloat(progressBar.getAttribute('data-collected')) || 492000;
+        const collected = parseFloat(progressBar.getAttribute('data-collected')) || 256000;
         const total = parseFloat(progressBar.getAttribute('data-total')) || 748000;
         const percentage = Math.round((collected / total) * 100 * 100) / 100; 
 
