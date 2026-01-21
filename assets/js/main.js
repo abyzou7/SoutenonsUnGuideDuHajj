@@ -1,5 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    
+    navLinks.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        const linkPage = linkHref.split('/').pop();
+        
+        if (linkPage === currentPage || 
+            (currentPage === '' && linkPage === 'index.html') ||
+            (currentPath.endsWith('/') && linkPage === 'index.html') ||
+            (currentPath === '/' && linkPage === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
     
     
     const menuToggle = document.querySelector('.menu-toggle');
@@ -87,21 +102,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const sections = document.querySelectorAll('.section');
     sections.forEach(section => {
-        observer.observe(section);
+        const rect = section.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (isVisible) {
+            section.classList.add('visible');
+        } else {
+            observer.observe(section);
+        }
     });
 
     
     const fadeElements = document.querySelectorAll('.fade-in');
     fadeElements.forEach(element => {
-        observer.observe(element);
+        const rect = element.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (isVisible) {
+            element.classList.add('visible');
+        } else {
+            observer.observe(element);
+        }
     });
 
     
     const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
         
         card.style.transitionDelay = `${index * 0.1}s`;
-        observer.observe(card);
+        
+        if (isVisible) {
+            card.classList.add('visible');
+        } else {
+            observer.observe(card);
+        }
     });
 
     
@@ -153,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (progressBar && progressPercentage) {
         const collected = parseFloat(progressBar.getAttribute('data-collected')) || 256000;
-        const total = parseFloat(progressBar.getAttribute('data-total')) || 748000;
+        const total = parseFloat(progressBar.getAttribute('data-total')) || 745655;
         const percentage = Math.round((collected / total) * 100 * 100) / 100; 
 
         

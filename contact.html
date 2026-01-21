@@ -83,19 +83,59 @@
                     <li>Partager des suggestions ou des remarques</li>
                 </ul>
 
-                <h2>Comment nous contacter</h2>
+                <h2>Formulaire de contact</h2>
                 
                 <div class="card">
-                    <h3>Par email</h3>
                     <p>
-                        Pour toute question, demande de documents ou vérification, vous pouvez nous contacter par email.
+                        Utilisez le formulaire ci-dessous pour nous contacter. Nous répondrons à votre demande 
+                        dans les meilleurs délais, généralement sous 48 à 72 heures.
+                    </p>
+                </div>
+
+                <form id="contactForm" class="contact-form" action="https://formsubmit.co/soutenonsunguidehajj@gmail.com" method="POST">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://abyzou7.github.io/SoutenonsUnGuideDuHajj/contact.html?success=true">
+                    <input type="hidden" name="_subject" value="Nouveau message depuis le site SoutenonsUnGuideDuHajj">
+                    
+                    <div class="form-group">
+                        <label for="name">Nom *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Sujet *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Sélectionnez un sujet</option>
+                            <option value="Question générale">Question générale</option>
+                            <option value="Demande de documents">Demande de documents</option>
+                            <option value="Question sur la légitimité religieuse">Question sur la légitimité religieuse</option>
+                            <option value="Vérification d'informations">Vérification d'informations</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="6" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-large">Envoyer le message</button>
+                    </div>
+                </form>
+
+                <div class="card" style="margin-top: var(--spacing-xl);">
+                    <h3>Contact direct par email</h3>
+                    <p>
+                        Vous pouvez également nous contacter directement par email à :
                     </p>
                     <p>
-                        <strong>Email :</strong> <em>À remplacer par l'adresse email réelle</em>
-                    </p>
-                    <p>
-                        <em>Nous nous engageons à répondre à toute demande sérieuse dans les meilleurs délais, 
-                        généralement sous 48 à 72 heures.</em>
+                        <strong>Email :</strong> <a href="mailto:soutenonsunguidehajj@gmail.com">soutenonsunguidehajj@gmail.com</a>
                     </p>
                 </div>
 
@@ -188,5 +228,6 @@
     </footer>
 
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/contact.js"></script>
 </body>
 </html>
