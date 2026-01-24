@@ -254,7 +254,6 @@ nav {
     position: relative;
     z-index: 1;
     max-width: 1200px;
-    animation: fadeInUp 1s ease-out;
 }
 
 .hero h1 {
@@ -263,6 +262,8 @@ nav {
     margin-bottom: var(--spacing-lg);
     color: var(--color-black);
     line-height: 1.1;
+    opacity: 0;
+    animation: heroTitle 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
 }
 
 .hero .subtitle {
@@ -274,6 +275,8 @@ nav {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
+    opacity: 0;
+    animation: heroSubtitle 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
 }
 
 .hero-buttons {
@@ -282,6 +285,41 @@ nav {
     justify-content: center;
     flex-wrap: wrap;
     margin-top: var(--spacing-xl);
+    opacity: 0;
+    animation: heroButtons 1s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards;
+}
+
+@keyframes heroTitle {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heroSubtitle {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heroButtons {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
@@ -728,6 +766,34 @@ footer p {
 
 .text-center {
     text-align: center;
+}
+
+.section-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+}
+
+.section-cta--left {
+    justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+    .section-cta {
+        flex-direction: column;
+    }
+
+    .section-cta--left {
+        align-items: flex-start;
+    }
+
+    .section-cta .btn {
+        width: 100%;
+        max-width: 320px;
+    }
 }
 
 .text-right {
