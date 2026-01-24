@@ -487,33 +487,37 @@ ul li, ol li {
 
 blockquote {
     border-left: 4px solid var(--color-gold);
-    padding: var(--spacing-lg);
-    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
     font-style: italic;
     color: var(--color-black-soft);
     background: linear-gradient(135deg, var(--color-beige) 0%, var(--color-sand-light) 100%);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-sm);
     font-size: 1.25rem;
-    line-height: 1.8;
+    line-height: 1.6;
 }
 
 blockquote p {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+blockquote p:last-child {
+    margin-bottom: 0;
 }
 
 
 .highlight-box {
     background: linear-gradient(135deg, var(--color-beige) 0%, var(--color-sand-light) 100%);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
     border-radius: var(--border-radius-lg);
     border-left: 4px solid var(--color-gold);
-    margin: var(--spacing-xl) 0;
+    margin: var(--spacing-lg) 0;
     box-shadow: var(--shadow-sm);
 }
 
 .highlight-box p {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 0;
 }
 
 .highlight-box ul {
