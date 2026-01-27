@@ -333,18 +333,18 @@ document.addEventListener('DOMContentLoaded', function() {
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('5. SIGNATURES', margin, yPos);
-        yPos += 6;
+        yPos += 5;
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.text(`Fait à : ${formData.place}`, margin, yPos);
-        yPos += 5;
+        yPos += 4.5;
 
         doc.text(`Le : ${formatDate(formData.documentDate)}`, margin, yPos);
-        yPos += 7;
+        yPos += 5;
 
         doc.text('Signature du bénéficiaire :', margin, yPos);
-        yPos += 5;
+        yPos += 4.5;
 
         /*doc.setFontSize(9);
         doc.text('Nom + signature', margin, yPos);
