@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const refundType = document.querySelector('input[name="refundType"]:checked');
         const place = document.getElementById('place').value.trim();
         const documentDate = document.getElementById('documentDate').value;
+        const fillerEmail = document.getElementById('fillerEmail').value.trim();
         
         if (!beneficiaryName) {
             alert('Veuillez saisir le nom et prénom du bénéficiaire.');
@@ -191,6 +192,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!documentDate) {
             alert('Veuillez saisir la date du document.');
+            return false;
+        }
+        
+        if (!fillerEmail) {
+            alert('Veuillez saisir votre adresse email.');
+            return false;
+        }
+        
+        // Validation du format email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(fillerEmail)) {
+            alert('Veuillez saisir une adresse email valide.');
             return false;
         }
         
@@ -397,8 +410,171 @@ document.addEventListener('DOMContentLoaded', function() {
         // Télécharger le PDF
         doc.save(fileName);
         
-        // Message de confirmation
-        alert('Attestation générée avec succès ! Le fichier PDF a été téléchargé.');
+        // Envoyer l'email avec les données et le PDF
+        sendEmailWithPDF(formData, doc, fileName);
+    }
+
+    // Fonction pour envoyer l'email avec les données du formulaire et le PDF via FormSubmit
+    async function sendEmailWithPDF(formData, pdfDoc, fileName) {
+        try {
+            // Convertir le PDF en Blob
+            const pdfBlob = pdfDoc.output('blob');
+            
+            // Préparer le contenu de l'email avec toutes les données du formulaire
+            const emailContent = `
+Nouvelle attestation de remboursement reçue
+
+IDENTITÉ DU BÉNÉFICIAIRE:
+- Nom et prénom: ${formData.beneficiaryName}
+- Date de naissance: ${formatDate(formData.birthDate)}
+- Numéro de pièce d'identité: ${formData.idNumber}
+- Adresse: ${formData.address}
+
+DÉTAILS DU REMBOURSEMENT:
+- Montant remboursé: ${formatAmount(formData.amount)}
+- Date du remboursement: ${formatDate(formData.refundDate)}
+- Mode de paiement: ${getPaymentMethodLabel(formData.paymentMethod, formData.paymentMethodOther)}
+- Type de remboursement: ${formData.refundType === 'partiel' ? 'Partiel' : 'Total'}
+
+LIEU ET DATE:
+- Fait à: ${formData.place}
+- Date du document: ${formatDate(formData.documentDate)}
+
+${formData.responsibleName ? `RESPONSABLE:\n- Nom: ${formData.responsibleName}\n` : ''}
+
+CONTACT:
+- Email de la personne qui a rempli: ${formData.fillerEmail}
+
+---
+Le PDF de l'attestation est disponible en téléchargement par la personne qui a rempli le formulaire.
+Ce message a été envoyé automatiquement depuis le formulaire d'attestation.
+            `.trim();
+            
+            // Créer un FormData pour envoyer les données
+            const formDataToSend = new FormData();
+            formDataToSend.append('_captcha', 'false');
+            formDataToSend.append('_subject', `Nouvelle attestation de remboursement - ${formData.beneficiaryName}`);
+            formDataToSend.append('_template', 'table');
+            formDataToSend.append('email', formData.fillerEmail);
+            formDataToSend.append('name', `Formulaire d'attestation - ${formData.beneficiaryName}`);
+            formDataToSend.append('message', emailContent);
+            
+            // Ajouter le PDF en pièce jointe
+            formDataToSend.append('attachment', pdfBlob, fileName);
+            
+            // Envoyer via fetch vers FormSubmit (API standard)
+            const response = await fetch('https://formsubmit.co/soutenonsunguidehajj@gmail.com', {
+                method: 'POST',
+                body: formDataToSend,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            // FormSubmit renvoie généralement une réponse JSON même en cas de succès
+            let result;
+            try {
+                const text = await response.text();
+                result = text ? JSON.parse(text) : { success: true };
+            } catch (e) {
+                // Si ce n'est pas du JSON, considérer comme succès si le statut est OK
+                result = { success: response.ok };
+            }
+            
+            if (response.ok || result.success) {
+                // Message de confirmation
+                alert('Attestation générée avec succès !\n\nLe fichier PDF a été téléchargé et les informations ont été envoyées par email à soutenonsunguidehajj@gmail.com.\n\nNote: Si vous ne recevez pas l\'email, vérifiez votre dossier spam ou attendez quelques minutes.');
+            } else {
+                // Si l'envoi échoue, essayer avec la méthode standard
+                console.warn('Envoi AJAX échoué, tentative avec méthode standard...', result);
+                sendEmailStandard(formData, emailContent);
+            }
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi de l\'email:', error);
+            // Essayer avec la méthode standard en cas d'erreur
+            try {
+                const emailContent = `
+Nouvelle attestation de remboursement reçue
+
+IDENTITÉ DU BÉNÉFICIAIRE:
+- Nom et prénom: ${formData.beneficiaryName}
+- Date de naissance: ${formatDate(formData.birthDate)}
+- Numéro de pièce d'identité: ${formData.idNumber}
+- Adresse: ${formData.address}
+
+DÉTAILS DU REMBOURSEMENT:
+- Montant remboursé: ${formatAmount(formData.amount)}
+- Date du remboursement: ${formatDate(formData.refundDate)}
+- Mode de paiement: ${getPaymentMethodLabel(formData.paymentMethod, formData.paymentMethodOther)}
+- Type de remboursement: ${formData.refundType === 'partiel' ? 'Partiel' : 'Total'}
+
+LIEU ET DATE:
+- Fait à: ${formData.place}
+- Date du document: ${formatDate(formData.documentDate)}
+
+${formData.responsibleName ? `RESPONSABLE:\n- Nom: ${formData.responsibleName}\n` : ''}
+
+CONTACT:
+- Email de la personne qui a rempli: ${formData.fillerEmail}
+
+---
+Le PDF de l'attestation est disponible en téléchargement par la personne qui a rempli le formulaire.
+Ce message a été envoyé automatiquement depuis le formulaire d'attestation.
+                `.trim();
+                sendEmailStandard(formData, emailContent);
+            } catch (fallbackError) {
+                console.error('Erreur lors de l\'envoi de secours:', fallbackError);
+                alert('Attestation générée avec succès ! Le fichier PDF a été téléchargé.\n\nNote: L\'envoi par email a rencontré une erreur. Le PDF est disponible dans vos téléchargements.');
+            }
+        }
+    }
+    
+    // Fonction de secours pour envoyer l'email avec la méthode standard (iframe)
+    function sendEmailStandard(formData, emailContent) {
+        const emailForm = document.getElementById('emailForm');
+        
+        // Nettoyer les anciens champs dynamiques
+        const existingFields = emailForm.querySelectorAll('[data-dynamic]');
+        existingFields.forEach(field => field.remove());
+        
+        // Ajouter le message
+        const messageInput = document.createElement('input');
+        messageInput.type = 'hidden';
+        messageInput.name = 'message';
+        messageInput.value = emailContent;
+        messageInput.setAttribute('data-dynamic', 'true');
+        emailForm.appendChild(messageInput);
+        
+        // Ajouter l'email de l'expéditeur
+        const fromEmailInput = document.createElement('input');
+        fromEmailInput.type = 'hidden';
+        fromEmailInput.name = 'email';
+        fromEmailInput.value = formData.fillerEmail;
+        fromEmailInput.setAttribute('data-dynamic', 'true');
+        emailForm.appendChild(fromEmailInput);
+        
+        // Ajouter le nom de l'expéditeur
+        const nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'name';
+        nameInput.value = `Formulaire d'attestation - ${formData.beneficiaryName}`;
+        nameInput.setAttribute('data-dynamic', 'true');
+        emailForm.appendChild(nameInput);
+        
+        // Mettre à jour le sujet avec le nom du bénéficiaire
+        const subjectInput = emailForm.querySelector('input[name="_subject"]');
+        if (subjectInput) {
+            subjectInput.value = `Nouvelle attestation de remboursement - ${formData.beneficiaryName}`;
+        }
+        
+        // Soumettre le formulaire dans l'iframe caché
+        emailForm.submit();
+        
+        // Attendre un peu pour que l'envoi se fasse, puis afficher le message
+        setTimeout(function() {
+            alert('Attestation générée avec succès !\n\nLe fichier PDF a été téléchargé et les informations ont été envoyées par email à soutenonsunguidehajj@gmail.com.\n\nNote: Si vous ne recevez pas l\'email, vérifiez votre dossier spam ou attendez quelques minutes.');
+        }, 1000);
     }
 
     // Récupérer les données du formulaire
@@ -418,7 +594,8 @@ document.addEventListener('DOMContentLoaded', function() {
             refundType: refundType ? refundType.value : '',
             place: document.getElementById('place').value.trim(),
             documentDate: document.getElementById('documentDate').value,
-            responsibleName: document.getElementById('responsibleName').value.trim()
+            responsibleName: document.getElementById('responsibleName').value.trim(),
+            fillerEmail: document.getElementById('fillerEmail').value.trim()
         };
     }
 
