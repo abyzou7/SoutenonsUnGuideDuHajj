@@ -114,19 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Gestion du formulaire
     const form = document.getElementById('attestationForm');
-    const previewBtn = document.getElementById('previewBtn');
     const generateBtn = document.getElementById('generateBtn');
-    const previewSection = document.getElementById('previewSection');
-    const previewContent = document.getElementById('previewContent');
-
-    // Aperçu
-    if (previewBtn) {
-        previewBtn.addEventListener('click', function() {
-            if (validateForm()) {
-                showPreview();
-            }
-        });
-    }
 
     // Génération du PDF
     if (form) {
@@ -214,98 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Afficher l'aperçu
-    function showPreview() {
-        const formData = getFormData();
-        const signatureData = signaturePad.toDataURL();
-        
-        let previewHTML = `
-            <div style="padding: 20px; background: white; border-radius: 8px; max-width: 800px; margin: 0 auto; font-family: 'Poppins', sans-serif;">
-                <h2 style="text-align: center; margin-bottom: 30px; font-size: 1.5rem;">ATTESTATION DE REMBOURSEMENT</h2>
-                <p style="text-align: center; margin-bottom: 30px; font-style: italic;">
-                    (Dans le cadre de la collecte de Zakat destinée aux pèlerins lésés du Hajj)
-                </p>
-                <hr style="margin: 20px 0; border: none; border-top: 2px solid #c9a961;">
-                
-                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">1. IDENTITÉ DU BÉNÉFICIAIRE</h3>
-                <p><strong>Je soussigné(e) :</strong></p>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li>• Nom et prénom : <strong>${formData.beneficiaryName}</strong></li>
-                    <li>• Date de naissance : <strong>${formatDate(formData.birthDate)}</strong></li>
-                    <li>• Numéro de pièce d'identité : <strong>${formData.idNumber}</strong></li>
-                    <li>• Adresse / Ville / Pays : <strong>${formData.address}</strong></li>
-                </ul>
-                
-                <hr style="margin: 30px 0; border: none; border-top: 2px solid #c9a961;">
-                
-                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">2. DÉTAILS DU REMBOURSEMENT</h3>
-                <p><strong>Reconnais avoir reçu, à ce jour :</strong></p>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li>• Montant remboursé : <strong>${formatAmount(formData.amount)}</strong></li>
-                    <li>• Date du remboursement : <strong>${formatDate(formData.refundDate)}</strong></li>
-                    <li>• Mode de paiement : <strong>${getPaymentMethodLabel(formData.paymentMethod, formData.paymentMethodOther)}</strong></li>
-                </ul>
-                <p style="margin-top: 15px;">
-                    Ce remboursement s'inscrit dans le cadre de la redistribution de fonds issus de la Zakat, 
-                    collectés afin d'indemniser les pèlerins lésés dans l'organisation du Hajj.
-                </p>
-                
-                <hr style="margin: 30px 0; border: none; border-top: 2px solid #c9a961;">
-                
-                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">3. DÉCLARATION DU BÉNÉFICIAIRE</h3>
-                <p>
-                    Je reconnais expressément que le montant mentionné ci-dessus m'a été remis en toute transparence 
-                    et correspond à un remboursement <strong>${formData.refundType === 'partiel' ? 'partiel' : 'total'}</strong> 
-                    des sommes engagées dans le cadre de cette affaire.
-                </p>
-                <p>
-                    Je déclare que ce versement :
-                </p>
-                <ul>
-                    <li>a été effectué volontairement,</li>
-                    <li>sans contrainte,</li>
-                    <li>et conformément à l'objectif annoncé de restitution aux pèlerins concernés.</li>
-                </ul>
-                
-                <hr style="margin: 30px 0; border: none; border-top: 2px solid #c9a961;">
-                
-                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">4. ENGAGEMENT ET DÉCHARGE</h3>
-                <p>
-                    Par la présente, je confirme que le montant reçu solde tout ou partie de ma créance, selon le cas, 
-                    et je décharge le responsable de la redistribution de toute contestation relative à la somme 
-                    effectivement versée à ce jour.
-                </p>
-                
-                <hr style="margin: 30px 0; border: none; border-top: 2px solid #c9a961;">
-                
-                <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem;">5. SIGNATURES</h3>
-                <p>Fait à : <strong>${formData.place}</strong></p>
-                <p>Le : <strong>${formatDate(formData.documentDate)}</strong></p>
-                
-                <div style="margin-top: 40px;">
-                    <p><strong>Signature du bénéficiaire :</strong></p>
-                    <p>${formData.beneficiaryName}</p>
-                    <img src="${signatureData}" alt="Signature" style="max-width: 300px; border: 1px solid #ccc; padding: 10px; background: white; margin-top: 10px;">
-                </div>
-                
-                ${formData.responsibleName ? `
-                <div style="margin-top: 40px;">
-                    <p><strong>Signature du responsable de la redistribution :</strong></p>
-                    <p>${formData.responsibleName}</p>
-                </div>
-                ` : ''}
-                
-                <p style="margin-top: 40px; font-style: italic; font-size: 0.9rem; color: #666;">
-                    Cette attestation est établie à des fins de traçabilité, de transparence et de responsabilité morale et financière.
-                </p>
-            </div>
-        `;
-        
-        previewContent.innerHTML = previewHTML;
-        previewSection.classList.add('active');
-        previewSection.scrollIntoView({ behavior: 'smooth' });
-    }
-
     // Générer le PDF
     function generatePDF() {
         const { jsPDF } = window.jspdf;
@@ -337,148 +233,126 @@ document.addEventListener('DOMContentLoaded', function() {
         doc.setFontSize(15);
         doc.setFont('helvetica', 'bold');
         doc.text('ATTESTATION DE REMBOURSEMENT', pageWidth / 2, yPos, { align: 'center' });
-        yPos += 6;
+        yPos += 7;
 
         // Sous-titre
         doc.setFontSize(9);
         doc.setFont('helvetica', 'italic');
         doc.text('(Dans le cadre de la collecte de Zakat destinée aux pèlerins lésés du Hajj)', pageWidth / 2, yPos, { align: 'center' });
-        yPos += 7;
-
-        // Ligne de séparation
-        doc.setDrawColor(0, 0, 0);
-        doc.setLineWidth(0.3);
-        doc.line(margin, yPos, pageWidth - margin, yPos);
-        yPos += 5;
+        yPos += 8;
 
         // Section 1: Identité du bénéficiaire
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('1. IDENTITÉ DU BÉNÉFICIAIRE', margin, yPos);
-        yPos += 5;
+        yPos += 6;
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.text('Je soussigné(e) :', margin, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`• Nom et prénom : ${formData.beneficiaryName}`, margin + 2, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`• Date de naissance : ${formatDate(formData.birthDate)}`, margin + 2, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`• Numéro de pièce d'identité : ${formData.idNumber}`, margin + 2, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         const addressLines = doc.splitTextToSize(`• Adresse / Ville / Pays : ${formData.address}`, contentWidth - 2);
         doc.text(addressLines, margin + 2, yPos);
-        yPos += addressLines.length * 4.5 + 3;
-
-        // Ligne de séparation
-        doc.line(margin, yPos, pageWidth - margin, yPos);
-        yPos += 5;
+        yPos += addressLines.length * 4.5 + 8;
 
         // Section 2: Détails du remboursement
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('2. DÉTAILS DU REMBOURSEMENT', margin, yPos);
-        yPos += 5;
+        yPos += 6;
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.text('Reconnais avoir reçu, à ce jour :', margin, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`• Montant remboursé : ${formatAmount(formData.amount)}`, margin + 2, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`• Date du remboursement : ${formatDate(formData.refundDate)}`, margin + 2, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`• Mode de paiement : ${getPaymentMethodLabel(formData.paymentMethod, formData.paymentMethodOther)}`, margin + 2, yPos);
-        yPos += 5;
+        yPos += 6;
 
         doc.setFontSize(9.5);
         const contextText = `Ce remboursement s'inscrit dans le cadre de la redistribution de fonds issus de la Zakat, collectés afin d'indemniser les pèlerins lésés dans l'organisation du Hajj.`;
         const contextLines = doc.splitTextToSize(contextText, contentWidth);
         doc.text(contextLines, margin, yPos);
-        yPos += contextLines.length * 4.5 + 3;
-
-        // Ligne de séparation
-        doc.line(margin, yPos, pageWidth - margin, yPos);
-        yPos += 5;
+        yPos += contextLines.length * 4.5 + 8;
 
         // Section 3: Déclaration du bénéficiaire
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('3. DÉCLARATION DU BÉNÉFICIAIRE', margin, yPos);
-        yPos += 5;
+        yPos += 6;
 
         doc.setFontSize(9.5);
         doc.setFont('helvetica', 'normal');
         const declarationText = `Je reconnais expressément que le montant mentionné ci-dessus m'a été remis en toute transparence et correspond à un remboursement ${formData.refundType === 'partiel' ? 'partiel' : 'total'} (rayer la mention inutile) des sommes engagées dans le cadre de cette affaire.`;
         const declarationLines = doc.splitTextToSize(declarationText, contentWidth);
         doc.text(declarationLines, margin, yPos);
-        yPos += declarationLines.length * 4.5 + 3;
+        yPos += declarationLines.length * 4.5 + 5;
 
         doc.text('Je déclare que ce versement :', margin, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text('• a été effectué volontairement,', margin + 2, yPos);
-        yPos += 4;
+        yPos += 4.5;
 
         doc.text('• sans contrainte,', margin + 2, yPos);
-        yPos += 4;
+        yPos += 4.5;
 
         doc.text('• et conformément à l\'objectif annoncé de restitution aux pèlerins concernés.', margin + 2, yPos);
-        yPos += 5;
-
-        // Ligne de séparation
-        doc.line(margin, yPos, pageWidth - margin, yPos);
-        yPos += 5;
+        yPos += 8;
 
         // Section 4: Engagement et décharge
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('4. ENGAGEMENT ET DÉCHARGE', margin, yPos);
-        yPos += 5;
+        yPos += 6;
 
         doc.setFontSize(9.5);
         doc.setFont('helvetica', 'normal');
         const dischargeText = `Par la présente, je confirme que le montant reçu solde tout ou partie de ma créance, selon le cas, et je décharge le responsable de la redistribution de toute contestation relative à la somme effectivement versée à ce jour.`;
         const dischargeLines = doc.splitTextToSize(dischargeText, contentWidth);
         doc.text(dischargeLines, margin, yPos);
-        yPos += dischargeLines.length * 4.5 + 5;
-
-        // Ligne de séparation
-        doc.line(margin, yPos, pageWidth - margin, yPos);
-        yPos += 5;
+        yPos += dischargeLines.length * 4.5 + 8;
 
         // Section 5: Signatures
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('5. SIGNATURES', margin, yPos);
-        yPos += 5;
+        yPos += 6;
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.text(`Fait à : ${formData.place}`, margin, yPos);
-        yPos += 4.5;
+        yPos += 5;
 
         doc.text(`Le : ${formatDate(formData.documentDate)}`, margin, yPos);
-        yPos += 6;
+        yPos += 7;
 
         doc.text('Signature du bénéficiaire :', margin, yPos);
-        yPos += 4;
+        yPos += 5;
 
-        doc.setFontSize(9);
+        /*doc.setFontSize(9);
         doc.text('Nom + signature', margin, yPos);
-        yPos += 4;
+        yPos += 4.5;*/
 
         doc.setFontSize(10);
         doc.text(formData.beneficiaryName, margin + 2, yPos);
-        yPos += 5;
+        yPos += 6;
 
         // Ajouter l'image de la signature
         try {
@@ -498,23 +372,24 @@ document.addEventListener('DOMContentLoaded', function() {
             doc.text('Signature du responsable de la redistribution :', margin, yPos);
             yPos += 4;
 
-            doc.setFontSize(9);
+            /*doc.setFontSize(9);
             doc.text('Nom + signature', margin, yPos);
-            yPos += 4;
+            yPos += 4;*/
 
             doc.setFontSize(10);
             doc.text(formData.responsibleName, margin + 2, yPos);
             yPos += 5;
         }
 
-        // Note de bas de page
-        yPos += 3;
+        // Note de bas de page - placée en bas de la page
         doc.setFontSize(7.5);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(100, 100, 100);
         const noteText = 'Cette attestation est établie à des fins de traçabilité, de transparence et de responsabilité morale et financière.';
         const noteLines = doc.splitTextToSize(noteText, contentWidth);
-        doc.text(noteLines, margin, yPos);
+        const noteHeight = noteLines.length * 3.5;
+        const noteYPos = pageHeight - margin - noteHeight;
+        doc.text(noteLines, margin, noteYPos);
 
         // Générer un nom de fichier
         const fileName = `Attestation_Remboursement_${formData.beneficiaryName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;

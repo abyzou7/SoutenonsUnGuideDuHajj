@@ -72,6 +72,18 @@
             background-color: var(--color-white);
         }
         
+        @media (max-width: 768px) {
+            .form-group {
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .form-group input,
+            .form-group textarea {
+                padding: 0.6rem;
+                font-size: 0.95rem;
+            }
+        }
+        
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
@@ -89,6 +101,13 @@
             padding: var(--spacing-md);
             background-color: var(--color-beige);
             border-radius: var(--border-radius-lg);
+        }
+        
+        @media (max-width: 768px) {
+            .signature-section {
+                margin: var(--spacing-md) 0;
+                padding: var(--spacing-sm);
+            }
         }
         
         .signature-container {
@@ -146,16 +165,11 @@
             min-width: 200px;
         }
         
-        .preview-section {
-            margin-top: var(--spacing-xl);
-            padding: var(--spacing-md);
-            background-color: var(--color-beige);
-            border-radius: var(--border-radius-lg);
-            display: none;
-        }
-        
-        .preview-section.active {
-            display: block;
+        @media (max-width: 768px) {
+            .form-actions {
+                margin-top: var(--spacing-md);
+                gap: var(--spacing-sm);
+            }
         }
         
         .info-box {
@@ -169,6 +183,17 @@
         .info-box p {
             margin-bottom: 0;
             font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .info-box {
+                padding: var(--spacing-sm);
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .info-box p {
+                font-size: 0.9rem;
+            }
         }
         
         .required {
@@ -189,6 +214,19 @@
             color: var(--color-black);
             border-bottom: 2px solid var(--color-gold);
             padding-bottom: var(--spacing-xs);
+        }
+        
+        @media (max-width: 768px) {
+            .form-section {
+                margin-bottom: var(--spacing-md);
+                padding: var(--spacing-sm);
+            }
+            
+            .form-section h2 {
+                font-size: 1.1rem;
+                margin-bottom: var(--spacing-sm);
+                padding-bottom: 0.3rem;
+            }
         }
         
         .radio-group {
@@ -236,18 +274,30 @@
         @media (max-width: 768px) {
             .form-actions {
                 flex-direction: column;
+                margin-top: var(--spacing-md);
+                gap: var(--spacing-sm);
             }
             
             .form-actions button {
                 width: 100%;
+                min-width: unset;
             }
             
             .signature-controls {
                 flex-direction: column;
+                gap: var(--spacing-xs);
             }
             
             .signature-controls button {
                 width: 100%;
+            }
+            
+            .radio-group {
+                gap: var(--spacing-xs);
+            }
+            
+            .radio-label {
+                padding: 0.4rem;
             }
         }
     </style>
@@ -427,15 +477,9 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" id="previewBtn" class="btn btn-secondary">Aperçu</button>
                         <button type="submit" id="generateBtn" class="btn btn-large">Générer l'attestation PDF</button>
                     </div>
                 </form>
-
-                <div id="previewSection" class="preview-section">
-                    <h3>Aperçu de l'attestation</h3>
-                    <div id="previewContent"></div>
-                </div>
             </div>
         </section>
     </main>
